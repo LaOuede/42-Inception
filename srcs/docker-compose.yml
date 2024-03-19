@@ -1,0 +1,14 @@
+# version: '3'
+
+# services:
+#   nginx:
+#     # container-name: nginx
+#     build: ./requirements/nginx/
+#     env_file:
+#       - .env
+#     ports:
+#       - "443:443"
+#     volumes:
+#       - ./public:/var/www/public
+#       - ./srcs/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+#     restart: on-failure
