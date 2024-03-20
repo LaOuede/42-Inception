@@ -1,9 +1,17 @@
-all: up
+#tests NGINX
+build:
+	docker build -t nginx srcs/requirements/nginx/
 
-up:
-	docker-compose -f ./srcs/docker-compose.yml up
+run:
+	docker run --name nginx-test -p 443:443 -d nginx
+
+list:
+	docker ps -a
 
 stop:
-	docker-compose -f ./srcs/docker-compose.yml stop
+	docker stop nginx-test
 
-.PHONY: all up stop
+del:
+	docker container prune && docker image prune -a
+
+.PHONY: stop build run list del
