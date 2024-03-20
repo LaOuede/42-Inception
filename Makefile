@@ -3,7 +3,7 @@ build:
 	docker build -t nginx srcs/requirements/nginx/
 
 run:
-	docker run --name nginx-test -p 443:443 -d nginx
+	docker run -ti --name nginx-test -p 443:443 -d nginx
 
 list:
 	docker ps -a
