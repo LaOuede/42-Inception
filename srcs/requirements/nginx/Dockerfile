@@ -12,11 +12,9 @@ RUN mkdir -p /etc/ssl/certs && \
 
 # Copy custom Nginx configuration and script
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
-COPY ./tools/setup.sh /
-RUN chmod +x /setup.sh
 
 # Expose port 443 for HTTPS traffic
 EXPOSE 443/tcp
 
 # Set the entrypoint to start nginx
-ENTRYPOINT ["/setup.sh"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
