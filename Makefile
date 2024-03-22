@@ -23,10 +23,9 @@ del:
 
 setup:
 	./env_config.sh
-# sudo mkdir -p /home/${LOGIN}/
-# sudo mkdir -p ${PATH_DATA}
-# sudo mkdir -p ${PATH_DATA}/mariadb-data
-# sudo mkdir -p ${PATH_DATA}/wordpress-data
+	mkdir -p ${PATH_DATA}
+	mkdir -p ${PATH_DATA}/mariadb-data
+	mkdir -p ${PATH_DATA}/wordpress-data
 
 up: setup
 	docker-compose -f ./srcs/docker-compose.yml up -d --build
@@ -36,5 +35,6 @@ down:
 
 fclean: del
 	./cleanup.sh
+	rm -rf ${PATH_DATA}
 
 .PHONY: stop build run list del fclean down up
