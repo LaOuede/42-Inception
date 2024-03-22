@@ -28,7 +28,7 @@ setup:
 	mkdir -p ${PATH_DATA}/wordpress-data
 
 up: setup
-	docker-compose -f ./srcs/docker-compose.yml up -d --build
+	docker-compose -f ./srcs/docker-compose.yml up --detach --build
 
 down:
 	docker-compose -f ./srcs/docker-compose.yml down
