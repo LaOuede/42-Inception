@@ -2,7 +2,7 @@ FROM    debian:buster
 
 # Update and install MariaDB
 RUN     apt update \
-        && apt install mariadb mariadb-client
+        && apt install mariadb-server
 
 # Copy custom MaraiDB configuration and script
 COPY    ./tools/config_db.sh /tmp/config_db.sh
