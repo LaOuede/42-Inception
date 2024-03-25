@@ -2,10 +2,8 @@
 #                                   COLOR SETTINGS                             #
 #------------------------------------------------------------------------------#
 W		:= \033[0m
-R		:= \033[1;31m
 G		:= \033[1;32m
 Y		:= \033[1;33m
-C 		:= \033[1;36m
 
 # Include environment variables
 -include .env.make
@@ -17,17 +15,26 @@ C 		:= \033[1;36m
 # Docker tasks
 all: setup
 
-build:
+build-nginx:
 	docker build -t nginx srcs/requirements/nginx/
 
-run:
+build-mariadb:
+	docker build -t mariadb srcs/requirements/mariadb/
+
+run-nginx:
 	docker run -ti --name nginx-test -p 443:443 -d nginx
+
+run-mariadb:
+	docker run -ti --name mariadb-test -d mariadb
 
 list:
 	docker ps -a
 
-stop:
+stop-nginx:
 	docker stop nginx-test
+
+stop-mariadb:
+	docker stop mariadb-test
 
 del:
 	@echo "-------------------- $YCleaning $W---------------------"

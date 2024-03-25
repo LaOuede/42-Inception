@@ -2,12 +2,23 @@ version: '3'
 
 services:
   nginx:
-# container-name: nginx
+    container_name: nginx
     build: ./requirements/nginx/
     env_file:
       - .env
     ports:
       - "443:443"
+    networks:
+      - inception
+    restart: on-failure
+
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb
+    env_file:
+      - .env
+    ports:
+      - 3306:3306
     networks:
       - inception
     restart: on-failure
