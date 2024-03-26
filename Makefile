@@ -28,7 +28,7 @@ run-mariadb:
 	docker run -ti --name mariadb-test -d mariadb
 
 db:
-	docker exec -it mariadb-test mysql -u root -p'${DB_ROOT}'
+	docker exec -it mariadb mysql -u root -p'${DB_ROOT}'
 
 list:
 	docker ps -a
