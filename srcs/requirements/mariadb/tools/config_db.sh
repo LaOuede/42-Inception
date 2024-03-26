@@ -2,7 +2,6 @@
 
 set -e # Exit immediately if a command exits with a non-zero status.
 
-
 echo "-------------- Database Initialization --------------"
 # Start the MariaDB server in the background.
 echo "***** Starting MariaDB database server : mysqld *****"
@@ -17,11 +16,21 @@ if [ -d "/var/lib/mysql/${DB_NAME}" ]; then
 else
 	# Execute SQL statements to set up the database and user.
 	echo "------------------ Table creation -------------------"
-	mysql -u root -p$DB_ROOT -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;"
-	mysql -u root -p$DB_ROOT -e "CREATE USER IF NOT EXISTS \`${DB_USER}\`@'localhost' IDENTIFIED BY '${DB_PASS}';"
-	mysql -u root -p$DB_ROOT -e "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO \`${DB_USER}\`@'%' IDENTIFIED BY '${DB_PASS}';"
-	mysql -u root -p$DB_ROOT -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT}';"
-	mysql -u root -p$DB_ROOT -e "FLUSH PRIVILEGES;"
+	# mysql -u root -p$DB_ROOT -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;"
+	# mysql -u root -p$DB_ROOT -e "CREATE USER IF NOT EXISTS \`${DB_USER}\`@'localhost' IDENTIFIED BY '${DB_PASS}';"
+	# mysql -u root -p$DB_ROOT -e "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO \`${DB_USER}\`@'%' IDENTIFIED BY '${DB_PASS}';"
+	# mysql -u root -p$DB_ROOT -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT}';"
+	# mysql -u root -p$DB_ROOT -e "FLUSH PRIVILEGES;"
+
+	echo "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;" > $DB_NAME.sql
+	echo "CREATE USER IF NOT EXISTS \`${DB_USER}\`@'localhost' IDENTIFIED BY '${DB_PASS}';" >> $DB_NAME.sql
+	echo "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO \`${DB_USER}\`@'%' IDENTIFIED BY '${DB_PASS}';" >> $DB_NAME.sql
+	echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT}';" >> $DB_NAME.sql
+	echo "FLUSH PRIVILEGES;" >> $DB_NAME.sql
+
+	echo "---------------- Configuration debug -----------------"
+	cat $DB_NAME.sql
+	mysql < $DB_NAME.sql
 
 	# Shut down the server.
 	echo "------------------ Server Shutdown ------------------"

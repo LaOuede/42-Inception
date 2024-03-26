@@ -12,7 +12,7 @@ RUN		mkdir -p /etc/ssl/certs && \
 		-subj "/C=CA/ST=QC/L=Quebec/O=42Network/OU=42Quebec/CN=login.42.fr"
 
 # Copy custom Nginx configuration and script
-ADD		./conf/nginx.conf /etc/nginx/nginx.conf
+ADD		./conf/nginx.conf /etc/nginx/conf.d
 
 # Expose port 443 for HTTPS traffic
 EXPOSE	443/tcp
