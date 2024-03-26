@@ -1,42 +1,32 @@
 #!/bin/sh
 
-echo "----------------- Database Config -----------------"
-
-# Step 1: Create /run/mysqld and /run/mysql repos
-if [ ! -d "/run/mysql" ]; then
-	mkdir /run/mysql
-	chown -R mysql:mysql /run/mysql
-fi
-
-if [ ! -d "/run/mysqld" ]; then
-	mkdir /run/mysqld
-	chown -R mysql:mysql /run/mysqld
-fi
+set -e # Exit immediately if a command exits with a non-zero status.
 
 
-# Step 2: Create DB
-if [ ! -f "/var/lib/mysql/inception.sql" ]; then
-	echo "---------------- Database Creation ----------------"
-	service mysql start
+echo "-------------- Database Initialization --------------"
+# Start the MariaDB server in the background.
+echo "***** Starting MariaDB database server : mysqld *****"
+mysqld &
 
-	echo "CREATE DATABASE IF NOT EXISTS $MYSQL_DB ;" > inception.sql
-	echo "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';" >> inception.sql
-	echo "GRANT ALL PRIVILEGES ON $MYSQL_DB.* TO '$MYSQL_USER'@'%';" >> inception.sql
-	echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';" >> inception.sql
-	echo "FLUSH PRIVILEGES;" >> inception.sql
+# Wait for the server to start up.
+sleep 10
 
-	# For tests purpose
-	# echo "CREATE DATABASE IF NOT EXISTS inception_db ;" > inception.sql
-	# echo "CREATE USER IF NOT EXISTS 'user'@'%' IDENTIFIED BY 'userpass';" >> inception.sql
-	# echo "GRANT ALL PRIVILEGES ON inception_db.* TO 'user'@'%';" >> inception.sql
-	# echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '123456';" >> inception.sql
-	# echo "FLUSH PRIVILEGES;" >> inception.sql
+# Execute SQL statements to set up the database and user.
+echo "------------------ Table creation -------------------"
+mysql -u root -p$DB_ROOT -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;"
+mysql -u root -p$DB_ROOT -e "CREATE USER IF NOT EXISTS \`${DB_USER}\`@'localhost' IDENTIFIED BY '${DB_PASS}';"
+mysql -u root -p$DB_ROOT -e "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO \`${DB_USER}\`@'%' IDENTIFIED BY '${DB_PASS}';"
+mysql -u root -p$DB_ROOT -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT}';"
+mysql -u root -p$DB_ROOT -e "FLUSH PRIVILEGES;"
 
-	mysql -u root < inception.sql
-	cp inception.sql /var/lib/mysql/
-	kill $(cat /var/run/mysqld/mysqld.pid)
-fi
-echo "------------------ Config is done -----------------"
-echo "------ Starting mariadb on port 3306 is done ------"
-# Keeps the container alive
-mysqld
+# Shut down the server.
+echo "------------------ Server Shutdown ------------------"
+mysqladmin -u root -p$DB_ROOT -S /var/run/mysqld/mysqld.sock shutdown
+
+# Sleep to ensure the shutdown process is OK.
+sleep 7
+echo "-------------- DB Initialization done ---------------"
+
+# Start the server.
+echo "----------------- Start mysqld_safe -----------------"
+exec mysqld_safe

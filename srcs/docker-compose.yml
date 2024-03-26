@@ -17,8 +17,10 @@ services:
     build: ./requirements/mariadb
     env_file:
       - .env
-    ports:
-      - 3306:3306
+    expose:
+      - "3306"
+    volumes:
+      - mariadb-vol:/var/lib/mysql
     networks:
       - inception
     restart: on-failure
@@ -27,3 +29,12 @@ networks:
   inception:
     name: inception
     driver: bridge
+
+volumes:
+  mariadb-vol:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: ${PATH_DATA}/mariadb-data
+
