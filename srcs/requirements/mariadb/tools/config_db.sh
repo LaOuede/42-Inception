@@ -1,23 +1,24 @@
 #!/bin/sh
 
-set -e # Exit immediately if a command exits with a non-zero status.
+# Exit immediately if a command exits with a non-zero status.
+set -e
 
 echo "\n-------------- Database Initialization --------------"
 # Start the MariaDB server.
 service mysql start
 
-# Wait for the server to start up.
+# Allow some time for the server to start.
 sleep 7
 
-# Check if the WordPress database directory does not exist
+# Check if the database already exists
 if [ -d "/var/lib/mysql/${DB_NAME}" ]; then
 	echo "Database ${DB_NAME} already exists. Skipping configuration step."
 else
-	# Execute SQL statements to set up the database and user.
+	# Execute SQL commands to create the database and user.
 	echo "\n------------------ Table creation -------------------"
 	echo "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;" > $DB_NAME.sql
 	echo "CREATE USER IF NOT EXISTS \`${DB_USER}\`@'localhost' IDENTIFIED BY '${DB_PASS}';" >> $DB_NAME.sql
-	echo "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO \`${DB_USER}\`@'%' IDENTIFIED BY '${DB_PASS}';" >> $DB_NAME.sql
+	echo "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO \`${DB_USER}\`@'%' IDENTIFIED BY '${DB_PASS}' WITH GRANT OPTION;" >> $DB_NAME.sql
 	echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT}';" >> $DB_NAME.sql
 	echo "FLUSH PRIVILEGES;" >> $DB_NAME.sql
 
@@ -29,11 +30,11 @@ else
 	echo "\n------------------ Server Shutdown ------------------"
 	mysqladmin -u root -p$DB_ROOT -S /var/run/mysqld/mysqld.sock shutdown
 
-	# Sleep to ensure the shutdown process is OK.
+	# Pause to ensure the server shutdown is OK.
 	sleep 7
 	echo "\n-------------- DB Initialization done ---------------"
 fi
 
-# Start the server.
+# Restart the server for normal operations.
 echo "\n----------------- Start mysqld_safe -----------------"
 exec mysqld_safe

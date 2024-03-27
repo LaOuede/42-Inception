@@ -55,7 +55,7 @@ stop-mariadb:
 	docker stop mariadb-test
 
 setup:
-	@echo "\n------------------ $YConfiguration $W------------------"
+	@echo "\n-------------------- $YConfiguration $W--------------------"
 	@echo "Running configuration script :"
 	@echo " ...User set as: ${LOGIN}"
 	@./env_config.sh 2>/dev/null
@@ -63,28 +63,28 @@ setup:
 	@mkdir -p ${PATH_DATA}
 	@mkdir -p ${PATH_DATA}/mariadb-data
 	@mkdir -p ${PATH_DATA}/wordpress-data
-	@echo " ... data dir. created for mariadb and wordpress"
+	@echo " ...data dir. created for mariadb and wordpress"
 	@echo "Configuration is $Gdone$W"
-	@echo "---------------------------------------------------\n"
+	@echo "------------------------------------------------------\n"
 
 up: setup
-	@echo "-------------------- $YBuilding $W---------------------"
+	@echo "---------------------- $YBuilding $W-----------------------"
 	@docker-compose -f ./srcs/docker-compose.yml up --detach --build --remove-orphans
-	@echo "---------------------------------------------------\n"
+	@echo "-------------------------------------------------------\n"
 
 stop:
-	@echo "-------------------- $YStopping $W---------------------"
+	@echo "---------------------- $YStopping $W-----------------------"
 	@docker-compose -f ./srcs/docker-compose.yml stop
-	@echo "---------------------------------------------------\n"
+	@echo "-------------------------------------------------------\n"
 
 fclean: stop
-	@echo "-------------------- $YCleaning$W ---------------------"
+	@echo "---------------------- $YCleaning$W -----------------------"
 	@./cleanup.sh
 	@sudo rm -rf ${PATH_DATA}
 	@docker-compose -f ./srcs/docker-compose.yml down --volumes --remove-orphans
 	@yes | docker container prune
 	@yes | docker image prune -a
-	@echo "---------------------------------------------------\n"
+	@echo "-------------------------------------------------------\n"
 
 re: fclean all
 
