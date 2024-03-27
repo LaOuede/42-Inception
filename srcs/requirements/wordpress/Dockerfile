@@ -29,8 +29,5 @@ RUN mkdir -p /run/php
 # Expose port 9000 port
 EXPOSE 9000
 
-# Work directory
-WORKDIR ${WP_PATH}
-
 # Set the entrypoint to start Wordpress
 ENTRYPOINT [ "/usr/local/bin/config_wp.sh" ]

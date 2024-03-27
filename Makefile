@@ -65,7 +65,7 @@ setup:
 	@mkdir -p ${PATH_DATA}/wordpress-data
 	@echo " ...data dir. created for mariadb and wordpress"
 	@echo "Configuration is $Gdone$W"
-	@echo "------------------------------------------------------\n"
+	@echo "-------------------------------------------------------\n"
 
 up: setup
 	@echo "---------------------- $YBuilding $W-----------------------"

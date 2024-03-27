@@ -4,16 +4,16 @@
 set -e
 
 echo "\n-------------- Database Initialization --------------"
-# Start the MariaDB server.
-service mysql start
-
-# Allow some time for the server to start.
-sleep 7
-
 # Check if the database already exists
 if [ -d "/var/lib/mysql/${DB_NAME}" ]; then
 	echo "Database ${DB_NAME} already exists. Skipping configuration step."
 else
+	# Start the MariaDB server.
+	service mysql start
+
+	# Allow some time for the server to start.
+	sleep 7
+
 	# Execute SQL commands to create the database and user.
 	echo "\n------------------ Table creation -------------------"
 	echo "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;" > $DB_NAME.sql
@@ -36,5 +36,5 @@ else
 fi
 
 # Restart the server for normal operations.
-echo "\n----------------- Start mysqld_safe -----------------"
+echo "\n----------------- Start mysqld_safe ----------------"
 exec mysqld_safe
