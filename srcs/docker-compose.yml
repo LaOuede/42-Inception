@@ -10,6 +10,8 @@ services:
       - "443:443"
     networks:
       - inception
+    # volumes:
+    #   - wordpress:/var/www/wordpress
     restart: on-failure
 
   mariadb:
@@ -24,6 +26,21 @@ services:
     networks:
       - inception
     restart: on-failure
+  
+  # wordpress:
+  #   container_name: wordpress
+  #   build: ./requirements/wordpress
+  #   depends_on:
+  #     - mariadb
+  #   env_file:
+  #     - .env
+  #   expose:
+  #     - "9000"
+  #   volumes:
+  #     - wordpress-vol:var/www/wordpress
+  #   networks:
+  #     - inception
+  #   restart: on-failure
 
 networks:
   inception:
@@ -37,3 +54,9 @@ volumes:
       type: 'none'
       o: 'bind'
       device: ${PATH_DATA}/mariadb-data
+  # wordpress-vol:
+  #   driver: local
+  #   driver_opts:
+  #     type: 'none'
+  #     o: 'bind'
+  #     device: ${PATH_DATA}/wordpress-data

@@ -1,4 +1,5 @@
 [mysqld]
+
 user = root
 datadir = /var/lib/mysql
 socket = /var/run/mysqld/mysqld.sock

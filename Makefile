@@ -21,11 +21,17 @@ build-nginx:
 build-mariadb:
 	docker build -t mariadb srcs/requirements/mariadb/
 
+build-wordpress:
+	docker build -t wordpress srcs/requirements/wordpress/
+
 run-nginx:
 	docker run -ti --name nginx-test -p 443:443 -d nginx
 
 run-mariadb:
 	docker run -ti --name mariadb-test -d mariadb
+
+run-wordpress:
+	docker run -ti --name wordpress-test -d wordpress
 
 mysql:
 	docker exec -it mariadb mysql -u root -p'${DB_ROOT}'
@@ -72,10 +78,10 @@ stop:
 	@echo "---------------------------------------------------\n"
 
 fclean: stop
-	@echo "-------------------- $YCleaning$W ----------------------"
+	@echo "-------------------- $YCleaning$W ---------------------"
 	@./cleanup.sh
 	@sudo rm -rf ${PATH_DATA}
-	@docker-compose -f ./srcs/docker-compose.yml down --remove-orphans
+	@docker-compose -f ./srcs/docker-compose.yml down --volumes --remove-orphans
 	@yes | docker container prune
 	@yes | docker image prune -a
 	@echo "---------------------------------------------------\n"

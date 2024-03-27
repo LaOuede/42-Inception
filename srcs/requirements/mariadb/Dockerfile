@@ -1,7 +1,7 @@
 FROM		debian:buster
 
 # Update and install MariaDB
-RUN			apt update -y \
+RUN			apt-get update -y \
 			&& apt-get install mariadb-server -y
 RUN			mkdir -p var/run/mysqld \
 			&& chown -R mysql:mysql var/run/mysqld
