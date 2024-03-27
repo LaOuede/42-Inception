@@ -22,7 +22,7 @@ echo "\n-------------- Wordpress Initialization -------------"
 
 # Check if the WordPress configuration file exists.
 if [ -f ${WP_PATH}/wp-config.php ]; then
-	echo "${WP_PATH}/wp-config.php file already exists. Skipping the configuration step."
+	echo "${WP_PATH}/wp-config.php already exists. Skipping the configuration step."
 else
     echo "\n----------------- 1.Wordpress config ----------------"
     wp-cli.phar config create --allow-root \
