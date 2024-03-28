@@ -12,7 +12,6 @@ Y		:= \033[1;33m
 .env.make: srcs/.env
 	@cat srcs/.env | sed 's/=/?=/g' > .env.make
 
-# Docker tasks
 all: setup up
 
 build-nginx:
@@ -42,8 +41,16 @@ mysql-test:
 bash-mariadb:
 	docker exec -it mariadb bash
 
+bash-wordpress:
+	docker exec -it wordpress bash
+
 logs-mariadb:
-	docker logs mariadb
+	docker logs -f mariadb
+# docker-compose logs --tail 100 --follow mariadb
+
+logs-wordpress:
+	docker logs -f wordpress
+# docker-compose logs --tail 100 --follow wordpress
 
 list:
 	docker ps -a
@@ -58,7 +65,7 @@ setup:
 	@echo "\n-------------------- $YConfiguration $W--------------------"
 	@echo "Running configuration script :"
 	@echo " ...User set as: ${LOGIN}"
-	@./env_config.sh 2>/dev/null
+	@./setup.sh 2>/dev/null
 	@echo " ...Host configuration is done"
 	@mkdir -p ${PATH_DATA}
 	@mkdir -p ${PATH_DATA}/mariadb-data
