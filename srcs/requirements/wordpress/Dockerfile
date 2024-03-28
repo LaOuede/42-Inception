@@ -21,7 +21,6 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
     && mv wp-cli.phar /usr/local/bin/wp-cli.phar
 
 # Copy custom php-fpm and wordpress configuration and script
-COPY conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
 COPY tools/config_wp.sh /usr/local/bin/config_wp.sh
 RUN chmod +x /usr/local/bin/config_wp.sh
 RUN mkdir -p /run/php

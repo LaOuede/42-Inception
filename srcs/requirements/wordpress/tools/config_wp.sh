@@ -16,6 +16,7 @@ initialize_wordpress() {
     if [ -f "${WP_PATH}/wp-config.php" ]; then
         echo "${WP_PATH}/wp-config.php already exists. Skipping the configuration step."
     else
+        congifure_conf_file
         configure_wordpress
         create_site
         create_default_user
@@ -38,6 +39,16 @@ wait_for_db() {
     done
     echo "MariaDB connection failed."
     exit 1
+}
+
+congifure_conf_file() {
+    if ! grep -q "listen = 0.0.0.0:9000" /etc/php/7.3/fpm/pool.d/www.conf; then
+        echo "listen = 0.0.0.0:9000" >> /etc/php/7.3/fpm/pool.d/www.conf
+    fi
+
+    if ! grep -q "clear_env = no" /etc/php/7.3/fpm/pool.d/www.conf; then
+        echo "clear_env = no" >> /etc/php/7.3/fpm/pool.d/www.conf
+    fi
 }
 
 configure_wordpress() {
@@ -74,8 +85,9 @@ create_default_user() {
 
 install_theme() {
     echo "----------------- 4.Wordpress theme -----------------"
-    wp-cli.phar theme install agama --activate --allow-root --path="$WP_PATH"
-    wp-cli.phar theme status agama --allow-root --path="$WP_PATH"
+    # agama neve
+    wp-cli.phar theme install zakra --activate --allow-root --path="$WP_PATH"
+    wp-cli.phar theme status zakra --allow-root --path="$WP_PATH"
 }
 
 create_post() {
