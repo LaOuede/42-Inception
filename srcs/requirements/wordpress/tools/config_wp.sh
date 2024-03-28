@@ -3,16 +3,44 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
-echo "-------------- Wordpress Initialization -------------"
+main() {
+    initialize_wordpress
+}
 
-# Connect to MariaDB.
-echo "--------------- Waiting for MariaDB... --------------"
-sleep 20
+initialize_wordpress() {
+    echo "-------------- Wordpress Initialization -------------"
 
-# Check if the WordPress configuration file exists.
-if [ -f ${WP_PATH}/wp-config.php ]; then
-	echo "${WP_PATH}/wp-config.php already exists. Skipping the configuration step."
-else
+    wait_for_db
+
+    # Check if the WordPress configuration file exists.
+    if [ -f "${WP_PATH}/wp-config.php" ]; then
+        echo "${WP_PATH}/wp-config.php already exists. Skipping the configuration step."
+    else
+        configure_wordpress
+        create_site
+        create_default_user
+        install_theme
+        create_post
+    fi
+
+    echo "--------------- WP Initialization DONE ----------------"
+    start_php_fpm
+}
+
+wait_for_db() {
+    echo "--------------- Waiting for MariaDB... --------------"
+    for i in {1..30}; do
+        if mariadb -h"${DB_HOST}" -u"${DB_USER}" -p"${DB_PASS}" "${DB_NAME}" &>/dev/null; then
+            echo "MariaDB is ready."
+            return
+        fi
+        sleep 1
+    done
+    echo "MariaDB connection failed."
+    exit 1
+}
+
+configure_wordpress() {
     echo "----------------- 1.Wordpress config ----------------"
     wp-cli.phar config create --allow-root \
         --dbname="$DB_NAME" \
@@ -20,7 +48,9 @@ else
         --dbpass="$DB_PASS" \
         --dbhost="$DB_HOST" \
         --path="$WP_PATH"
-	
+}
+
+create_site() {
     echo "------------------ 2.Site creation ------------------"
     wp-cli.phar core install --allow-root \
         --url="$DOMAIN_NAME" \
@@ -29,7 +59,9 @@ else
         --admin_password="$WP_ADMIN_PASS" \
         --admin_email="$WP_ADMIN_EMAIL" \
         --path="$WP_PATH"
+}
 
+create_default_user() {
     echo "-------------- 3.Default user creation --------------"
     wp-cli.phar user create --allow-root \
         "$WP_USER" \
@@ -38,15 +70,15 @@ else
         --display_name="$WP_USER" \
         --user_pass="$WP_USER_PASS" \
         --path="$WP_PATH"
-	
+}
+
+install_theme() {
     echo "----------------- 4.Wordpress theme -----------------"
-    # sydney
-    wp-cli.phar theme install agama --activate \
-        --allow-root \
-        --path="$WP_PATH"
-    wp-cli.phar theme status agama --allow-root \
-        --path="$WP_PATH"
-    
+    wp-cli.phar theme install agama --activate --allow-root --path="$WP_PATH"
+    wp-cli.phar theme status agama --allow-root --path="$WP_PATH"
+}
+
+create_post() {
     echo "------------------- 5.Post creation -------------------"
     wp-cli.phar post create --allow-root \
         --post_author="$WP_ADMIN" \
@@ -55,10 +87,11 @@ else
         --post_status=publish \
         --comment_status=open \
         --path="$WP_PATH"
+}
 
-	echo "--------------- WP Initialization DONE ----------------"
-fi
+start_php_fpm() {
+    echo "-------------------- Start php-fpm --------------------"
+    /usr/sbin/php-fpm7.3 -F
+}
 
-# Execute php-fpm.
-echo "-------------------- Start php-fpm --------------------"
-/usr/sbin/php-fpm7.3 -F
+main

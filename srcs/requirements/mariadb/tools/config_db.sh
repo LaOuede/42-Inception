@@ -3,38 +3,50 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
-echo "-------------- Database Initialization --------------"
-# Check if the database already exists
-if [ -d "/var/lib/mysql/${DB_NAME}" ]; then
-	echo "Database ${DB_NAME} already exists. Skipping configuration step."
-else
-	# Start the MariaDB server.
-	service mysql start
+main() {
+	initialize_database
+}
 
-	# Allow some time for the server to start.
-	sleep 7
+initialize_database() {
+    echo "-------------- Database Initialization --------------"
+	# Check if the database already exists.
+    if [ -d "/var/lib/mysql/${DB_NAME}" ]; then
+        echo "Database ${DB_NAME} already exists. Skipping configuration step."
+    else
+        start_mariadb
+        create_database_and_user
+        shutdown_mariadb
+    fi
+	echo "-------------- DB Initialization DONE ---------------"
+    start_mariadb_safe
+}
 
-	# Execute SQL commands to create the database and user.
-	echo "------------------ Table creation -------------------"
-	echo "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;" > $DB_NAME.sql
-	echo "CREATE USER IF NOT EXISTS \`${DB_USER}\`@'localhost' IDENTIFIED BY '${DB_PASS}';" >> $DB_NAME.sql
-	echo "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO \`${DB_USER}\`@'%' IDENTIFIED BY '${DB_PASS}' WITH GRANT OPTION;" >> $DB_NAME.sql
-	echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT}';" >> $DB_NAME.sql
-	echo "FLUSH PRIVILEGES;" >> $DB_NAME.sql
+start_mariadb() {
+	echo "----------------- Starting MariaDB ------------------"
+    service mysql start
+    sleep 7
+}
 
-	echo "---------------- Configuration debug ----------------"
-	cat $DB_NAME.sql
-	mysql < $DB_NAME.sql
+create_database_and_user() {
+    echo "------------------ Table creation -------------------"
+    SQL_COMMANDS="${DB_NAME}.sql"
+    echo "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;" > "$SQL_COMMANDS"
+    echo "CREATE USER IF NOT EXISTS \`${DB_USER}\`@'localhost' IDENTIFIED BY '${DB_PASS}';" >> "$SQL_COMMANDS"
+    echo "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO \`${DB_USER}\`@'%' IDENTIFIED BY '${DB_PASS}' WITH GRANT OPTION;" >> "$SQL_COMMANDS"
+    echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT}';" >> "$SQL_COMMANDS"
+    echo "FLUSH PRIVILEGES;" >> "$SQL_COMMANDS"
+    mysql < "$SQL_COMMANDS" || { echo "Failed to initialize database"; exit 1; }
+}
 
-	# Shut down the server.
-	echo "------------------ Server Shutdown ------------------"
-	mysqladmin -u root -p$DB_ROOT -S /var/run/mysqld/mysqld.sock shutdown
+shutdown_mariadb() {
+    echo "------------------ Server Shutdown ------------------"
+    mysqladmin -u root -p"$DB_ROOT" -S /var/run/mysqld/mysqld.sock shutdown
+    sleep 7
+}
 
-	# Pause to ensure the server shutdown is OK.
-	sleep 7
-	echo "-------------- DB Initialization done ---------------"
-fi
+start_mariadb_safe() {
+    echo "----------------- Start mysqld_safe -----------------"
+    exec mysqld_safe
+}
 
-# Restart the server for normal operations.
-echo "----------------- Start mysqld_safe -----------------"
-exec mysqld_safe
+main
