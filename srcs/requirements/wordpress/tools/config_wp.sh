@@ -16,7 +16,7 @@ initialize_wordpress() {
     if [ -f "${WP_PATH}/wp-config.php" ]; then
         echo "Config file already exists. Skipping the configuration step."
     else
-        congifure_conf_file
+        configure_conf_file
         configure_wordpress
         create_site
         create_default_user
@@ -24,7 +24,7 @@ initialize_wordpress() {
         create_post
     fi
 
-    echo "--------------- WP Initialization DONE ----------------"
+    echo "-------------- WP Initialization DONE ---------------"
     start_php_fpm
 }
 
@@ -41,7 +41,7 @@ wait_for_db() {
     exit 1
 }
 
-congifure_conf_file() {
+configure_conf_file() {
     if ! grep -q "listen = 0.0.0.0:9000" /etc/php/7.3/fpm/pool.d/www.conf; then
         echo "listen = 0.0.0.0:9000" >> /etc/php/7.3/fpm/pool.d/www.conf
     fi
@@ -86,8 +86,8 @@ create_default_user() {
 install_theme() {
     echo "----------------- 4.Wordpress theme -----------------"
     # agama bravada zakra
-    wp-cli.phar theme install agama --activate --allow-root --path="$WP_PATH"
-    wp-cli.phar theme status agama --allow-root --path="$WP_PATH"
+    wp-cli.phar theme install zakra --activate --allow-root --path="$WP_PATH"
+    wp-cli.phar theme status zakra --allow-root --path="$WP_PATH"
 }
 
 create_post() {
