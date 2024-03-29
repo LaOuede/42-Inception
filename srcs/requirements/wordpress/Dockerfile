@@ -6,7 +6,8 @@ RUN apt-get update -y \
     # php to run wordpress, php-fpm to communicate with nginx, php-mysqli to communicate with mariadb 
     php7.3 php-fpm php-mysqli \
     mariadb-client \
-	sendmail sendmail-cf m4
+	sendmail sendmail-cf m4 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Wordpress installation
 RUN wget https://fr.wordpress.org/wordpress-6.3.1-fr_FR.tar.gz -P /var/www \

@@ -58,7 +58,7 @@ configure_wordpress() {
         --dbuser="$DB_USER" \
         --dbpass="$DB_PASS" \
         --dbhost="$DB_HOST" \
-        --path="$WP_PATH"
+        --path="$WP_PATH" || { echo "WordPress configuration failed"; exit 1; }
 }
 
 create_site() {
@@ -69,7 +69,7 @@ create_site() {
         --admin_user="$WP_ADMIN" \
         --admin_password="$WP_ADMIN_PASS" \
         --admin_email="$WP_ADMIN_EMAIL" \
-        --path="$WP_PATH"
+        --path="$WP_PATH" || { echo "Site creation failed"; exit 1; }
 }
 
 create_default_user() {
@@ -80,14 +80,16 @@ create_default_user() {
         --role=contributor \
         --display_name="$WP_USER" \
         --user_pass="$WP_USER_PASS" \
-        --path="$WP_PATH"
+        --path="$WP_PATH" || { echo "Default user creation failed"; exit 1; }
 }
 
 install_theme() {
     echo "----------------- 4.Wordpress theme -----------------"
     # agama bravada zakra
-    wp-cli.phar theme install zakra --activate --allow-root --path="$WP_PATH"
-    wp-cli.phar theme status zakra --allow-root --path="$WP_PATH"
+    wp-cli.phar theme install zakra --activate --allow-root \
+        --path="$WP_PATH" || { echo "Theme installation failed"; exit 1; }
+    wp-cli.phar theme status zakra --allow-root \
+        --path="$WP_PATH" || { echo "Theme status check failed"; exit 1; }
 }
 
 create_post() {
@@ -98,7 +100,7 @@ create_post() {
         --post_content='A unique aspect of INCEPTION is its musical score composed by Hans Zimmer. The song "Non, Je Ne Regrette Rien" by Edith Piaf, used as a plot device in the film, is actually integrated into the design. Zimmer slowed down its elements to create the iconic, slow, and reverberating sounds that pervade the movie, particularly in dream sequences. This creative approach adds depth to the exploration of time and memory, blurring the lines between different levels of consciousness.' \
         --post_status=publish \
         --comment_status=open \
-        --path="$WP_PATH"
+        --path="$WP_PATH" || { echo "Post creation failed"; exit 1; }
 }
 
 start_php_fpm() {
