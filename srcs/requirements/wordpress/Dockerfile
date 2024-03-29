@@ -24,7 +24,7 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
 COPY tools/config_wp.sh /usr/local/bin/config_wp.sh
 RUN chmod +x /usr/local/bin/config_wp.sh
 
-# Ensure the /run/php directory exists for PHP-FPM runtime files.
+# Ensure the /run/php directory exists for PHP-FPM runtime files
 RUN mkdir -p /run/php
 
 # Expose port 9000 port

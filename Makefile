@@ -65,7 +65,7 @@ setup:
 	@echo "\n-------------------- $YConfiguration $W--------------------"
 	@echo "Running configuration script :"
 	@echo " ...User set as: ${LOGIN}"
-	@./setup.sh 2>/dev/null
+	@./srcs/requirements/tools/setup.sh 2>/dev/null
 	@echo " ...Host configuration is done"
 	@mkdir -p ${PATH_DATA}
 	@mkdir -p ${PATH_DATA}/mariadb-data
@@ -86,7 +86,7 @@ stop:
 
 fclean: stop
 	@echo "---------------------- $YCleaning$W -----------------------"
-	@./cleanup.sh
+	@./srcs/requirements/tools/cleanup.sh
 	@sudo rm -rf ${PATH_DATA}
 	@docker-compose -f ./srcs/docker-compose.yml down --volumes --remove-orphans
 	@yes | docker container prune
