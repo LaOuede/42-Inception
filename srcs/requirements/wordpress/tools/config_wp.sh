@@ -14,7 +14,7 @@ initialize_wordpress() {
 
     # Check if the WordPress configuration file exists.
     if [ -f "${WP_PATH}/wp-config.php" ]; then
-        echo "${WP_PATH}/wp-config.php already exists. Skipping the configuration step."
+        echo "Config file already exists. Skipping the configuration step."
     else
         congifure_conf_file
         configure_wordpress
@@ -85,13 +85,13 @@ create_default_user() {
 
 install_theme() {
     echo "----------------- 4.Wordpress theme -----------------"
-    # agama neve
-    wp-cli.phar theme install zakra --activate --allow-root --path="$WP_PATH"
-    wp-cli.phar theme status zakra --allow-root --path="$WP_PATH"
+    # agama bravada zakra
+    wp-cli.phar theme install agama --activate --allow-root --path="$WP_PATH"
+    wp-cli.phar theme status agama --allow-root --path="$WP_PATH"
 }
 
 create_post() {
-    echo "------------------- 5.Post creation -------------------"
+    echo "------------------ 5.Post creation ------------------"
     wp-cli.phar post create --allow-root \
         --post_author="$WP_ADMIN" \
         --post_title='Fun fact about Inception!' \
@@ -102,7 +102,7 @@ create_post() {
 }
 
 start_php_fpm() {
-    echo "-------------------- Start php-fpm --------------------"
+    echo "------------------- Start php-fpm -------------------"
     /usr/sbin/php-fpm7.3 -F
 }
 
