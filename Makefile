@@ -79,6 +79,9 @@ up: setup
 	@docker-compose -f ./srcs/docker-compose.yml up --detach --build --remove-orphans
 	@echo "-------------------------------------------------------\n"
 
+start:
+	@docker-compose -f ./srcs/docker-compose.yml up --detach --no-build
+
 stop:
 	@echo "---------------------- $YStopping $W-----------------------"
 	@docker-compose -f ./srcs/docker-compose.yml stop
@@ -95,4 +98,4 @@ fclean: stop
 
 re: fclean all
 
-.PHONY: all stop build run list del fclean down up
+.PHONY: all stop build run list del fclean down up start
