@@ -9,10 +9,10 @@ services:
       - .env
     ports:
       - "443:443"
-    networks:
-      - inception
     volumes:
       - wordpress-vol:/var/www/wordpress
+    networks:
+      - inception
     restart: on-failure
 
   mariadb:
