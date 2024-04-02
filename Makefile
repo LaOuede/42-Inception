@@ -1,3 +1,7 @@
+#******************************************************************************#
+#                              INCEPTION MAKEFILE                              #
+#******************************************************************************#
+
 #------------------------------------------------------------------------------#
 #                                COLOR SETTINGS                                #
 #------------------------------------------------------------------------------#
@@ -61,6 +65,41 @@ DC_FILE := ./srcs/docker-compose.yml
 # Convert .env to Makefile format
 .env.make: srcs/.env
 	@sudo cat srcs/.env | sed 's/=/?=/g' > .env.make
+
+
+#------------------------------------------------------------------------------#
+#                                   HELP MENU                                  #
+#------------------------------------------------------------------------------#
+help:
+	@echo "Usage: make [command]"
+	@echo "Commands:"
+	@echo "  all               $(G)Build all images and launch the containers$(W)"
+	@echo "  bash-mariadb      $(G)Access bash shell in the MariaDB container$(W)"
+	@echo "  bash-wordpress    $(G)Access bash shell in the WordPress container$(W)"
+	@echo "  build             $(G)Build all Docker images (Nginx, MariaDB, WordPress)$(W)"
+	@echo "  build-mariadb     $(G)Build the MariaDB Docker image$(W)"
+	@echo "  build-nginx       $(G)Build the Nginx Docker image$(W)"
+	@echo "  build-wordpress   $(G)Build the WordPress Docker image$(W)"
+	@echo "  fclean            $(G)Remove all containers, images, volumes, and custom networks$(W)"
+	@echo "  inspect-mariadb   $(G)Inspect the MariaDB volume$(W)"
+	@echo "  inspect-wordpress $(G)Inspect the WordPress volume$(W)"
+	@echo "  list              $(G)List all running containers using docker-compose ps$(W)"
+	@echo "  logs-mariadb      $(G)Tail logs from the MariaDB container$(W)"
+	@echo "  logs-wordpress    $(G)Tail logs from the WordPress container$(W)"
+	@echo "  mysql             $(G)Access MariaDB MySQL prompt$(W)"
+	@echo "  mysql-test        $(G)Access MariaDB MySQL prompt in a test container$(W)"
+	@echo "  network           $(G)List all Docker networks$(W)"
+	@echo "  re                $(G)Rebuild and restart the containers$(W)"
+	@echo "  run-mariadb       $(G)Run MariaDB container in detached mode$(W)"
+	@echo "  run-nginx         $(G)Run Nginx container in detached mode$(W)"
+	@echo "  run-wordpress     $(G)Run WordPress container in detached mode$(W)"
+	@echo "  setup             $(G)Prepare environment, directories for data$(W)"
+	@echo "  start             $(G)Alias for 'up', start services in background without rebuild$(W)"
+	@echo "  stop              $(G)Stop services defined in docker-compose.yml$(W)"
+	@echo "  stop-mariadb      $(G)Stop the MariaDB test container$(W)"
+	@echo "  stop-nginx        $(G)Stop the Nginx test container$(W)"
+	@echo "  up                $(G)Start services defined in docker-compose.yml in background$(W)"
+	@echo "  volume            $(G)List all Docker volumes$(W)"
 
 
 #------------------------------------------------------------------------------#
@@ -142,40 +181,5 @@ stop-mariadb:
 
 stop-wordpress:
 	docker stop wordpress-test
-
-
-#------------------------------------------------------------------------------#
-#                                   HELP MENU                                  #
-#------------------------------------------------------------------------------#
-help:
-	@echo "Usage: make [command]"
-	@echo "Commands:"
-	@echo "  all               $(G)Build all images and launch the containers$(W)"
-	@echo "  bash-mariadb      $(G)Access bash shell in the MariaDB container$(W)"
-	@echo "  bash-wordpress    $(G)Access bash shell in the WordPress container$(W)"
-	@echo "  build             $(G)Build all Docker images (Nginx, MariaDB, WordPress)$(W)"
-	@echo "  build-mariadb     $(G)Build the MariaDB Docker image$(W)"
-	@echo "  build-nginx       $(G)Build the Nginx Docker image$(W)"
-	@echo "  build-wordpress   $(G)Build the WordPress Docker image$(W)"
-	@echo "  fclean            $(G)Remove all containers, images, volumes, and custom networks$(W)"
-	@echo "  inspect-mariadb   $(G)Inspect the MariaDB volume$(W)"
-	@echo "  inspect-wordpress $(G)Inspect the WordPress volume$(W)"
-	@echo "  list              $(G)List all running containers using docker-compose ps$(W)"
-	@echo "  logs-mariadb      $(G)Tail logs from the MariaDB container$(W)"
-	@echo "  logs-wordpress    $(G)Tail logs from the WordPress container$(W)"
-	@echo "  mysql             $(G)Access MariaDB MySQL prompt$(W)"
-	@echo "  mysql-test        $(G)Access MariaDB MySQL prompt in a test container$(W)"
-	@echo "  network           $(G)List all Docker networks$(W)"
-	@echo "  re                $(G)Rebuild and restart the containers$(W)"
-	@echo "  run-mariadb       $(G)Run MariaDB container in detached mode$(W)"
-	@echo "  run-nginx         $(G)Run Nginx container in detached mode$(W)"
-	@echo "  run-wordpress     $(G)Run WordPress container in detached mode$(W)"
-	@echo "  setup             $(G)Prepare environment, directories for data$(W)"
-	@echo "  start             $(G)Alias for 'up', start services in background without rebuild$(W)"
-	@echo "  stop              $(G)Stop services defined in docker-compose.yml$(W)"
-	@echo "  stop-mariadb      $(G)Stop the MariaDB test container$(W)"
-	@echo "  stop-nginx        $(G)Stop the Nginx test container$(W)"
-	@echo "  up                $(G)Start services defined in docker-compose.yml in background$(W)"
-	@echo "  volume            $(G)List all Docker volumes$(W)"
 
 .PHONY: all stop build run list del fclean down up start setup build-nginx build-mariadb build-wordpress run-nginx run-mariadb run-wordpress logs-mariadb logs-wordpress stop-test stop-nginx stop-mariadb re
