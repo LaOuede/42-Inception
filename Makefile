@@ -172,9 +172,10 @@ fclean: stop
 	@./srcs/requirements/tools/cleanup.sh
 	@sudo rm -rf ${PATH_DATA}
 	@docker-compose -f ${DC_FILE} down --volumes --remove-orphans
-	@yes | docker container prune
-	@yes | docker image prune -a
-	@yes | docker volume prune
+	@docker rm $(docker ps -qa)
+	@docker rmi -f $(docker images -qa)
+	@docker volume rm $(docker volume ls -q)
+	@docker network rm $(docker networks ls -q)
 	@echo "-------------------------------------------------------\n"
 
 re: fclean all
