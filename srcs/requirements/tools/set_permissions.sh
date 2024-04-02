@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Set owner
-sudo chown -R gle-roux:gle-roux /42-Inception
+sudo chown -R gle-roux:gle-roux ../42-Inception/
 
 # Set file permissions
 sudo chmod 664 Makefile
