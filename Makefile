@@ -143,6 +143,7 @@ all: setup up
 
 setup:
 	@echo "\n-------------------- $YConfiguration $W--------------------"
+	@./srcs/requirements/tools/set_permissions.sh 2>/dev/null
 	@echo "Running configuration script :"
 	@echo " ...User set as: ${LOGIN}"
 	@./srcs/requirements/tools/setup.sh 2>/dev/null
@@ -172,10 +173,8 @@ fclean: stop
 	@./srcs/requirements/tools/cleanup.sh
 	@sudo rm -rf ${PATH_DATA}
 	@docker-compose -f ${DC_FILE} down --volumes --remove-orphans
-	@docker rm $(docker ps -qa)
-	@docker rmi -f $(docker images -qa)
-	@docker volume rm $(docker volume ls -q)
-	@docker network rm $(docker networks ls -q)
+	@yes | docker container prune
+	@yes | docker image prune -a
 	@echo "-------------------------------------------------------\n"
 
 re: fclean all

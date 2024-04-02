@@ -10,12 +10,6 @@ sudo chmod 664 srcs/.env
 sudo chmod 664 srcs/requirements/mariadb/Dockerfile
 sudo chmod 664 srcs/requirements/nginx/Dockerfile
 sudo chmod 664 srcs/requirements/wordpress/Dockerfile
-# sudo chmod 777 Makefile
-# sudo chmod 777 srcs/docker-compose.yml
-# sudo chmod 777 srcs/.env
-# sudo chmod 777 srcs/requirements/mariadb/Dockerfile
-# sudo chmod 777 srcs/requirements/nginx/Dockerfile
-# sudo chmod 777 srcs/requirements/wordpress/Dockerfile
 
 # Set executable permissions for scripts
 sudo chmod 775 srcs/requirements/mariadb/tools/config_db.sh
