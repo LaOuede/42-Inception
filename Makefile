@@ -9,7 +9,9 @@ Y		:= \033[1;33m
 #------------------------------------------------------------------------------#
 #                                     RULES                                    #
 #------------------------------------------------------------------------------#
-all: setup up
+all: set_permissions setup up
+
+set_permissions:
 	@echo "\n----------------- $YSetting permissions $W-----------------"
 	./srcs/requirements/tools/set_permissions.sh 2>/dev/null
 	@echo "-------------------------------------------------------\n"
@@ -63,7 +65,7 @@ DC_FILE := ./srcs/docker-compose.yml
 
 # Convert .env to Makefile format
 .env.make: srcs/.env
-	@cat srcs/.env | sed 's/=/?=/g' > .env.make
+	@sudo cat srcs/.env | sed 's/=/?=/g' > .env.make
 
 
 #------------------------------------------------------------------------------#
