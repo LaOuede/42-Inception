@@ -10,8 +10,8 @@ RUN	apt-get update -y \
 	-out /etc/ssl/certs/nginx-selfsigned.crt \
 	-subj "/C=CA/ST=QC/L=Quebec/O=42Network/OU=42Quebec/CN=login.42.fr" \
 	# Clean up apt cache to reduce image size
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/*
 
 # Copy custom Nginx configuration and script
 COPY ./conf/nginx.conf /etc/nginx/conf.d

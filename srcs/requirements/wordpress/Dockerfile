@@ -2,24 +2,24 @@ FROM debian:buster
 
 # Update and installations
 RUN apt-get update -y \
-    && apt-get -y install wget \
-    # php to run wordpress, php-fpm to communicate with nginx, php-mysqli to communicate with mariadb 
-    php7.3 php-fpm php-mysqli \
-    mariadb-client \
+	&& apt-get -y install wget \
+	# php to run wordpress, php-fpm to communicate with nginx, php-mysqli to communicate with mariadb 
+	php7.3 php-fpm php-mysqli \
+	mariadb-client \
 	sendmail sendmail-cf m4 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+	&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Wordpress installation
 RUN wget https://fr.wordpress.org/wordpress-6.3.1-fr_FR.tar.gz -P /var/www \
-    && cd /var/www \
-    && tar -xzf wordpress-6.3.1-fr_FR.tar.gz \
-    && rm wordpress-6.3.1-fr_FR.tar.gz \
-    && chown -R root:root /var/www/wordpress
+	&& cd /var/www \
+	&& tar -xzf wordpress-6.3.1-fr_FR.tar.gz \
+	&& rm wordpress-6.3.1-fr_FR.tar.gz \
+	&& chown -R root:root /var/www/wordpress
 
 # Wordpress CLI installation
 RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-    && chmod +x wp-cli.phar \
-    && mv wp-cli.phar /usr/local/bin/wp-cli.phar
+	&& chmod +x wp-cli.phar \
+	&& mv wp-cli.phar /usr/local/bin/wp-cli.phar
 
 # Copy custom php-fpm and wordpress configuration and script
 COPY tools/config_wp.sh /usr/local/bin/config_wp.sh
