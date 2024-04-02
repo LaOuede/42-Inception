@@ -9,12 +9,7 @@ Y		:= \033[1;33m
 #------------------------------------------------------------------------------#
 #                                     RULES                                    #
 #------------------------------------------------------------------------------#
-all: set_permissions setup up
-
-set_permissions:
-	@echo "\n----------------- $YSetting permissions $W-----------------"
-	./srcs/requirements/tools/set_permissions.sh 2>/dev/null
-	@echo "-------------------------------------------------------\n"
+all: setup up
 
 setup:
 	@echo "\n-------------------- $YConfiguration $W--------------------"

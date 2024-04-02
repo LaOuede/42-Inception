@@ -1,4 +1,5 @@
 #!/bin/sh
+# ./srcs/requirements/tools/set_permissions.sh 2>/dev/null
 
 # Set owner
 sudo chown -R gle-roux:gle-roux ../42-Inception/
