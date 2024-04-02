@@ -174,6 +174,7 @@ fclean: stop
 	@docker-compose -f ${DC_FILE} down --volumes --remove-orphans
 	@yes | docker container prune
 	@yes | docker image prune -a
+	@yes | docker volume prune
 	@echo "-------------------------------------------------------\n"
 
 re: fclean all
