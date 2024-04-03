@@ -41,13 +41,30 @@ stop:
 	@docker-compose -f ${DC_FILE} stop
 	@echo "-------------------------------------------------------\n"
 
-fclean: stop
+clean: stop
 	@echo "---------------------- $YCleaning$W -----------------------"
 	@./srcs/requirements/tools/cleanup.sh
-	@sudo rm -rf ${PATH_DATA}
-	@docker-compose -f ${DC_FILE} down --volumes --remove-orphans
-	@yes | docker container prune
-	@yes | docker image prune -a
+	@if [ -d "${PATH_DATA}" ]; then \
+		echo "Removing data directory ${PATH_DATA}"; \
+		sudo rm -rf ${PATH_DATA}; \
+	fi
+	@if [ -n "$$(docker-compose -f ${DC_FILE} ps -q)" ]; then \
+		echo "Bringing down services defined in ${DC_FILE}..."; \
+		docker-compose -f ${DC_FILE} down --volumes --remove-orphans; \
+	fi
+	@if [ -n "$$(docker container ls -aq)" ]; then \
+		echo "Removing all stopped containers..."; \
+		yes | docker container prune; \
+	fi
+	@if [ -n "$$(docker images -aq)" ]; then \
+		echo "Removing all unused images..."; \
+		yes | docker image prune -a; \
+	fi
+	@echo "-------------------------------------------------------\n"
+
+fclean: stop
+	@echo "---------------------- $YFCleaning$W -----------------------"
+	@docker system prune
 	@echo "-------------------------------------------------------\n"
 
 re: fclean all
@@ -143,7 +160,8 @@ bash-wordpress:
 	docker exec -it wordpress bash
 
 # Docker logs targets
-logs: logs-mariadb logs-wordpress
+logs:
+	cd srcs && docker-compose logs -f
 
 logs-mariadb:
 	docker logs -f mariadb
@@ -182,4 +200,4 @@ stop-mariadb:
 stop-wordpress:
 	docker stop wordpress-test
 
-.PHONY: all stop build run list del fclean down up start setup build-nginx build-mariadb build-wordpress run-nginx run-mariadb run-wordpress logs-mariadb logs-wordpress stop-test stop-nginx stop-mariadb re
+.PHONY: all stop build run list del fclean clean down up start setup build-nginx build-mariadb build-wordpress run-nginx run-mariadb run-wordpress logs-mariadb logs-wordpress stop-test stop-nginx stop-mariadb re
