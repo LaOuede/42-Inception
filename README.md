@@ -23,6 +23,7 @@ Through this project, I've gained proficiency in:
 ---
 
 <h3 align="left">Components Deployed 🏗</h3>
+
 - <b>Web Server</b>: A container running Nginx, serving a simple web application.
 - <b>Database</b>: A relational database container (MariaDB) using MySQL for data persistence.
 - <b>WordPress</b>: A WordPress container that allows for content management and blogging. This container is linked to the database container for dynamic content storage.
